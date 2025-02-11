@@ -2,12 +2,13 @@
   "name": "@common-module/markdown-editor",
   "author": "yj.gaia",
   "homepage": "https://personas.gaia.cc/yj.gaia",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
-  "types": "./lib/module/index.d.ts",
-  "main": "./lib/module/index.js",
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
   "dependencies": {
-    "@common-module/markdown": "^0.0.1"
+    "@common-module/markdown": "^0.0.2",
+    "@common-module/app-components": "^0.1.6"
   },
   "devDependencies": {}
 }
