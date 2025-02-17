@@ -8,8 +8,7 @@
   "main": "./lib/index.js",
   "dependencies": {
     "@common-module/markdown": "^0.0.2",
-    "@common-module/app-components": "^0.1.6",
-    "@common-module/upload": "^0.0.1"
+    "@common-module/app-components": "^0.1.6"
   },
   "devDependencies": {}
 }
