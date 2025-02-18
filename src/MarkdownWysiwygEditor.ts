@@ -1,6 +1,6 @@
 import { DomNode, el } from "@common-module/app";
+import { MarkdownHtmlConverter } from "@common-module/markdown";
 import { Debouncer } from "@common-module/ts";
-import MarkdownConverter from "./MarkdownConverter.js";
 
 export default class MarkdownWysiwygEditor extends DomNode {
   private editorArea: DomNode;
@@ -20,7 +20,7 @@ export default class MarkdownWysiwygEditor extends DomNode {
 
   private onInput(): void {
     const rawText = this.editorArea.htmlElement.innerText;
-    const children = MarkdownConverter.convertMarkdownToDomNodes(rawText);
-    console.log(children);
+    const html = MarkdownHtmlConverter.convertMarkdownToHtml(rawText);
+    console.log(html);
   }
 }
