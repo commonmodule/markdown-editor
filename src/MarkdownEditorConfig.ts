@@ -80,6 +80,12 @@ class DefaultYouTubeIcon extends DomNode {
   }
 }
 
+class DefaultMoreIcon extends DomNode {
+  constructor() {
+    super("span.icon.more", "⋮");
+  }
+}
+
 class MarkdownEditorConfig {
   public BoldIcon: DomNodeConstructor = DefaultBoldIcon;
   public ItalicIcon: DomNodeConstructor = DefaultItalicIcon;
@@ -94,6 +100,7 @@ class MarkdownEditorConfig {
   public TableIcon: DomNodeConstructor = DefaultTableIcon;
   public ImageIcon: DomNodeConstructor = DefaultImageIcon;
   public YouTubeIcon: DomNodeConstructor = DefaultYouTubeIcon;
+  public MoreIcon: DomNodeConstructor = DefaultMoreIcon;
 }
 
 export default new MarkdownEditorConfig();

@@ -14,6 +14,7 @@ declare class MarkdownEditorConfig {
     TableIcon: DomNodeConstructor;
     ImageIcon: DomNodeConstructor;
     YouTubeIcon: DomNodeConstructor;
+    MoreIcon: DomNodeConstructor;
 }
 declare const _default: MarkdownEditorConfig;
 export default _default;
