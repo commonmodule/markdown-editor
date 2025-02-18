@@ -17,5 +17,6 @@ declare class MarkdownConverter {
     private convertTableToMarkdown;
     convertHtmlToMarkdown(html: string): string;
 }
-export default MarkdownConverter;
+declare const _default: MarkdownConverter;
+export default _default;
 //# sourceMappingURL=MarkdownConverter.d.ts.map

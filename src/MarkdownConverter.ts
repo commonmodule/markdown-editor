@@ -523,4 +523,4 @@ class MarkdownConverter {
   }
 }
 
-export default MarkdownConverter;
+export default new MarkdownConverter();

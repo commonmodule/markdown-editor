@@ -1,1 +1,1 @@
-{"version":3,"file":"MarkdownWysiwygEditor.d.ts","sourceRoot":"","sources":["../src/MarkdownWysiwygEditor.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAM,MAAM,oBAAoB,CAAC;AAEjD,MAAM,CAAC,OAAO,OAAO,qBAAsB,SAAQ,OAAO;IACxD,OAAO,CAAC,UAAU,CAAU;;CAU7B"}
+{"version":3,"file":"MarkdownWysiwygEditor.d.ts","sourceRoot":"","sources":["../src/MarkdownWysiwygEditor.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAM,MAAM,oBAAoB,CAAC;AAIjD,MAAM,CAAC,OAAO,OAAO,qBAAsB,SAAQ,OAAO;IACxD,OAAO,CAAC,UAAU,CAAU;IAC5B,OAAO,CAAC,SAAS,CAAY;;IAc7B,OAAO,CAAC,OAAO;CAKhB"}
