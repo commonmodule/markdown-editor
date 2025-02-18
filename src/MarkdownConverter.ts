@@ -1,192 +1,389 @@
 import { DomNode, el } from "@common-module/app";
-import { MarkdownParser } from "@common-module/markdown";
+import { MarkdownParser, MarkdownSyntax } from "@common-module/markdown";
 import { DomSelector } from "@common-module/universal-page";
 
 class MarkdownConverter {
-  // ──────────────────────────────────────────────
-  // Markdown → DOM Conversion (supporting all syntaxes)
-  // ──────────────────────────────────────────────
+  // Constructor no longer accepts a syntax list
+  constructor() {}
 
-  public convertMarkdownToDomNodes(markdown: string): DomNode[] {
-    const ast = MarkdownParser.parse(markdown);
+  // Helper method: Check if a syntax (or any in an array) is supported
+  private isSupported(
+    syntax: string | string[],
+    syntaxSet: Set<string>,
+  ): boolean {
+    if (Array.isArray(syntax)) {
+      return syntax.some((s) => syntaxSet.has(s));
+    }
+    return syntaxSet.has(syntax);
+  }
+
+  private isBlockSyntaxSupported(
+    syntax: string | string[],
+    syntaxSet: Set<string>,
+  ): boolean {
+    return this.isSupported(syntax, syntaxSet);
+  }
+
+  private isInlineSyntaxSupported(
+    syntax: string | string[],
+    syntaxSet: Set<string>,
+  ): boolean {
+    return this.isSupported(syntax, syntaxSet);
+  }
+
+  // -----------------------------------------------------
+  // Markdown to DOM conversion
+  // -----------------------------------------------------
+
+  public convertMarkdownToDomNodes(
+    markdown: string,
+    supportedSyntax?: MarkdownSyntax[],
+  ): DomNode[] {
+    const syntaxSet = new Set<MarkdownSyntax>(
+      supportedSyntax && Array.isArray(supportedSyntax)
+        ? supportedSyntax
+        : Object.values(MarkdownSyntax),
+    );
+    const ast = MarkdownParser.parse(markdown, Array.from(syntaxSet));
     const nodes: DomNode[] = [];
     for (const node of ast) {
-      nodes.push(this.convertBlockNode(node));
+      nodes.push(this.convertBlockNode(node, syntaxSet));
     }
     return nodes;
   }
 
-  private convertBlockNode(node: any): DomNode {
-    // Convert each block node into a DOM node based on its type.
+  private convertBlockNode(node: any, syntaxSet: Set<string>): DomNode {
     switch (node.type) {
       case "heading":
-        return el(
-          `h${node.level}` as DomSelector,
-          {},
-          ...this.convertInlineNodes(node.children),
-        );
+        if (this.isBlockSyntaxSupported(`heading${node.level}`, syntaxSet)) {
+          return el(
+            `h${node.level}` as DomSelector,
+            ...this.convertInlineNodes(node.children, syntaxSet),
+          );
+        }
+        return el("p", ...this.convertInlineNodes(node.children, syntaxSet));
       case "paragraph":
-        return el("p", {}, ...this.convertInlineNodes(node.children));
+        if (this.isBlockSyntaxSupported(MarkdownSyntax.Paragraph, syntaxSet)) {
+          return el("p", ...this.convertInlineNodes(node.children, syntaxSet));
+        }
+        return el("div", ...this.convertInlineNodes(node.children, syntaxSet));
       case "list": {
-        const listItems = node.items.map((item: any) =>
-          this.convertListItem(item)
+        if (
+          this.isBlockSyntaxSupported(
+            [MarkdownSyntax.UnorderedList, MarkdownSyntax.OrderedList],
+            syntaxSet,
+          )
+        ) {
+          const listItems = node.items.map((item: any) =>
+            this.convertListItem(item, syntaxSet)
+          );
+          return el(node.ordered ? "ol" : "ul", ...listItems);
+        }
+        return el(
+          "div",
+          ...node.items.map((item: any) =>
+            el("p", ...this.convertInlineNodes(item.children, syntaxSet))
+          ),
         );
-        return el(node.ordered ? "ol" : "ul", {}, ...listItems);
       }
       case "codeBlock": {
-        const codeElem = node.language
-          ? el(`code.language-${node.language}`, node.content)
-          : el("code", {}, node.content);
-        return el("pre", {}, codeElem);
+        if (
+          (node.language &&
+            this.isBlockSyntaxSupported(
+              MarkdownSyntax.FencedCodeBlockWithLanguage,
+              syntaxSet,
+            )) ||
+          this.isBlockSyntaxSupported(
+            MarkdownSyntax.FencedCodeBlock,
+            syntaxSet,
+          ) ||
+          this.isBlockSyntaxSupported(
+            MarkdownSyntax.IndentedCodeBlock,
+            syntaxSet,
+          )
+        ) {
+          const codeElem = node.language
+            ? el(`code.language-${node.language}`, node.content)
+            : el("code", node.content);
+          return el("pre", codeElem);
+        }
+        return el("pre", node.content);
       }
       case "blockquote":
+        if (this.isBlockSyntaxSupported(MarkdownSyntax.Blockquote, syntaxSet)) {
+          return el(
+            "blockquote",
+            ...node.children.map((child: any) =>
+              this.convertBlockNode(child, syntaxSet)
+            ),
+          );
+        }
         return el(
-          "blockquote",
-          {},
-          ...node.children.map((child: any) => this.convertBlockNode(child)),
+          "div",
+          ...node.children.map((child: any) =>
+            this.convertBlockNode(child, syntaxSet)
+          ),
         );
       case "horizontalRule":
-        return el("hr", {});
+        if (
+          this.isBlockSyntaxSupported(
+            [MarkdownSyntax.HorizontalRule, MarkdownSyntax.ThematicBreak],
+            syntaxSet,
+          )
+        ) {
+          return el("hr");
+        }
+        return el("div", "-----");
       case "table":
-        return this.convertTable(node);
+        if (this.isBlockSyntaxSupported(MarkdownSyntax.Table, syntaxSet)) {
+          return this.convertTable(node);
+        }
+        return el("div", ...this.convertTable(node).children);
       case "footnoteDefinition":
-        return el(
-          "div.footnote-definition",
-          { "dataset": { id: node.identifier } },
-          ...this.convertInlineNodes(node.children),
-        );
+        if (
+          this.isBlockSyntaxSupported(
+            MarkdownSyntax.FootnoteDefinition,
+            syntaxSet,
+          )
+        ) {
+          return el("div.footnote-definition", {
+            dataset: { id: node.identifier },
+          }, ...this.convertInlineNodes(node.children, syntaxSet));
+        }
+        return el("div", ...this.convertInlineNodes(node.children, syntaxSet));
       default:
-        // Unsupported block types are rendered as a paragraph with a warning.
-        return el("p", {}, "Unsupported node");
+        return el("p", "Unsupported node");
     }
   }
 
-  private convertListItem(item: any): DomNode {
-    const childrenNodes = this.convertInlineNodes(item.children);
+  private convertListItem(item: any, syntaxSet: Set<string>): DomNode {
+    const childrenNodes = this.convertInlineNodes(item.children, syntaxSet);
     if (item.nested) {
-      childrenNodes.push(this.convertBlockNode(item.nested));
+      childrenNodes.push(this.convertBlockNode(item.nested, syntaxSet));
     }
-    return el("li", {}, ...childrenNodes);
+    return el("li", ...childrenNodes);
   }
 
   private convertTable(table: any): DomNode {
-    // Simple table conversion: generate <thead> and <tbody>
-    const theadCells = table.header.map((cell: string) => el("th", {}, cell));
-    const theadRow = el("tr", {}, ...theadCells);
-    const thead = el("thead", {}, theadRow);
+    const theadCells = table.header.map((cell: string) => el("th", cell));
+    const theadRow = el("tr", ...theadCells);
+    const thead = el("thead", theadRow);
 
     const tbodyRows = table.rows.map((row: string[]) => {
-      const cells = row.map((cell: string) => el("td", {}, cell));
-      return el("tr", {}, ...cells);
+      const cells = row.map((cell: string) => el("td", cell));
+      return el("tr", ...cells);
     });
-    const tbody = el("tbody", {}, ...tbodyRows);
+    const tbody = el("tbody", ...tbodyRows);
 
-    return el("table", {}, thead, tbody);
+    return el("table", thead, tbody);
   }
 
-  private convertInlineNodes(inlines: any[]): (DomNode | string)[] {
-    const nodes: (DomNode | string)[] = [];
-    for (const inline of inlines) {
-      nodes.push(this.convertInlineNode(inline));
-    }
-    return nodes;
+  private convertInlineNodes(
+    inlines: any[],
+    syntaxSet: Set<string>,
+  ): (DomNode | string)[] {
+    return inlines.map((inline) => this.convertInlineNode(inline, syntaxSet));
   }
 
-  private convertInlineNode(inline: any): DomNode | string {
-    // Convert inline AST nodes into DOM nodes or strings.
+  private convertInlineNode(
+    inline: any,
+    syntaxSet: Set<string>,
+  ): DomNode | string {
     switch (inline.type) {
       case "text":
         return inline.content;
       case "escape":
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Escape, syntaxSet)) {
+          return inline.character;
+        }
         return inline.character;
       case "bold":
-        return el("strong", {}, ...this.convertInlineNodes(inline.children));
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Bold, syntaxSet)) {
+          return el(
+            "strong",
+            {},
+            ...this.convertInlineNodes(inline.children, syntaxSet),
+          );
+        }
+        return this.convertInlineNodes(inline.children, syntaxSet).join("");
       case "italic":
-        return el("em", {}, ...this.convertInlineNodes(inline.children));
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Italic, syntaxSet)) {
+          return el(
+            "em",
+            {},
+            ...this.convertInlineNodes(inline.children, syntaxSet),
+          );
+        }
+        return this.convertInlineNodes(inline.children, syntaxSet).join("");
       case "boldItalic":
-        // Nested tags: <strong><em>...</em></strong>
-        return el(
-          "strong",
-          {},
-          el("em", {}, ...this.convertInlineNodes(inline.children)),
-        );
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.BoldItalic, syntaxSet)
+        ) {
+          return el(
+            "strong",
+            {},
+            el(
+              "em",
+              {},
+              ...this.convertInlineNodes(inline.children, syntaxSet),
+            ),
+          );
+        }
+        return this.convertInlineNodes(inline.children, syntaxSet).join("");
       case "strikethrough":
-        return el("del", {}, ...this.convertInlineNodes(inline.children));
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.Strikethrough, syntaxSet)
+        ) {
+          return el(
+            "del",
+            {},
+            ...this.convertInlineNodes(inline.children, syntaxSet),
+          );
+        }
+        return this.convertInlineNodes(inline.children, syntaxSet).join("");
       case "inlineCode":
-        return el("code", {}, inline.content);
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.InlineCode, syntaxSet)
+        ) {
+          return el("code", inline.content);
+        }
+        return inline.content;
       case "link":
-        return el(
-          "a",
-          { href: inline.url, title: inline.title || "" },
-          ...this.convertInlineNodes(inline.children),
-        );
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Link, syntaxSet)) {
+          return el(
+            "a",
+            { href: inline.url, title: inline.title || "" },
+            ...this.convertInlineNodes(inline.children, syntaxSet),
+          );
+        }
+        return inline.children
+          .map((child: any) => this.convertInlineNode(child, syntaxSet))
+          .join("");
       case "autoLink":
-        return el("a", { href: inline.url }, inline.url);
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.AutoLink, syntaxSet)) {
+          return el("a", { href: inline.url }, inline.url);
+        }
+        return inline.url;
       case "emailLink":
-        return el("a", { href: `mailto:${inline.email}` }, inline.email);
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.EmailLink, syntaxSet)) {
+          return el("a", { href: `mailto:${inline.email}` }, inline.email);
+        }
+        return inline.email;
       case "image":
-        return el("img", {
-          src: inline.url,
-          alt: inline.alt,
-          title: inline.title || "",
-        });
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Image, syntaxSet)) {
+          return el("img", {
+            src: inline.url,
+            alt: inline.alt,
+            title: inline.title || "",
+          });
+        }
+        return inline.alt;
       case "emoji":
-        return `:${inline.name}:`;
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Emoji, syntaxSet)) {
+          return `:${inline.name}:`;
+        }
+        return inline.name;
       case "mention":
-        return el(
-          "a.mention",
-          { href: `/user/${inline.username}` },
-          "@" + inline.username,
-        );
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.Mention, syntaxSet)) {
+          return el(
+            "a.mention",
+            { href: `/user/${inline.username}` },
+            "@" + inline.username,
+          );
+        }
+        return "@" + inline.username;
       case "issueReference":
-        return el(
-          "a.issue-reference",
-          { href: `/issues/${inline.issue}` },
-          "#" + inline.issue,
-        );
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.IssueReference, syntaxSet)
+        ) {
+          return el(
+            "a.issue-reference",
+            { href: `/issues/${inline.issue}` },
+            "#" + inline.issue,
+          );
+        }
+        return "#" + inline.issue;
       case "commitReference":
-        return el(
-          "a.commit-reference",
-          { href: `/commit/${inline.commit}` },
-          inline.commit,
-        );
+        if (
+          this.isInlineSyntaxSupported(
+            MarkdownSyntax.CommitReference,
+            syntaxSet,
+          )
+        ) {
+          return el(
+            "a.commit-reference",
+            { href: `/commit/${inline.commit}` },
+            inline.commit,
+          );
+        }
+        return inline.commit;
       case "pullRequestReference":
-        return el(
-          "a.pr-reference",
-          { href: `/pull/${inline.pr}` },
-          "#" + inline.pr,
-        );
+        if (
+          this.isInlineSyntaxSupported(
+            MarkdownSyntax.PullRequestReference,
+            syntaxSet,
+          )
+        ) {
+          return el(
+            "a.pr-reference",
+            { href: `/pull/${inline.pr}` },
+            "#" + inline.pr,
+          );
+        }
+        return "#" + inline.pr;
       case "teamMention":
-        return el(
-          "a.team-mention",
-          { href: `/team/${inline.team}` },
-          "@" + inline.team,
-        );
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.TeamMention, syntaxSet)
+        ) {
+          return el(
+            "a.team-mention",
+            { href: `/team/${inline.team}` },
+            "@" + inline.team,
+          );
+        }
+        return "@" + inline.team;
       case "htmlInline":
-        // Note: innerHTML is used here. In production, ensure proper sanitization.
-        return el("span", { innerHTML: inline.content });
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.HTMLInline, syntaxSet)
+        ) {
+          return el("span", { innerHTML: inline.content });
+        }
+        return inline.content;
       case "mathInline":
-        return el("span.math-inline", `$${inline.content}$`);
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.MathInline, syntaxSet)
+        ) {
+          return el("span.math-inline", `$${inline.content}$`);
+        }
+        return `$${inline.content}$`;
       case "lineBreak":
-        return el("br", {});
+        if (this.isInlineSyntaxSupported(MarkdownSyntax.LineBreak, syntaxSet)) {
+          return el("br");
+        }
+        return "";
       case "softLineBreak":
+        if (
+          this.isInlineSyntaxSupported(MarkdownSyntax.SoftLineBreak, syntaxSet)
+        ) {
+          return "\n";
+        }
         return "\n";
       default:
         return "";
     }
   }
 
-  // ──────────────────────────────────────────────
-  // HTML → Markdown Conversion (supporting all syntaxes)
-  // ──────────────────────────────────────────────
+  // -----------------------------------------------------
+  // HTML to Markdown conversion
+  // -----------------------------------------------------
 
   private convertList(
     el: Element,
     bullet: string | ((index: number) => string),
   ): string {
     let markdown = "";
-    const items = Array.from(el.children).filter((child) =>
-      child.tagName.toLowerCase() === "li"
+    const items = Array.from(el.children).filter(
+      (child) => child.tagName.toLowerCase() === "li",
     );
     items.forEach((item, index) => {
       const bulletText = typeof bullet === "string"
@@ -248,8 +445,13 @@ class MarkdownConverter {
           const classAttr = codeElem.getAttribute("class") || "";
           const langMatch = classAttr.match(/language-(\w+)/);
           const language = langMatch ? langMatch[1] : "";
-          return "```" + (language ? language : "") + "\n" +
-            this.convertElement(codeElem).trim() + "\n```\n\n";
+          return (
+            "```" +
+            (language ? language : "") +
+            "\n" +
+            this.convertElement(codeElem).trim() +
+            "\n```\n\n"
+          );
         }
         return "```\n" + this.convertElement(elNode).trim() + "\n```\n\n";
       } else if (tag === "blockquote") {
@@ -271,7 +473,8 @@ class MarkdownConverter {
         }
         return this.convertElement(elNode);
       } else if (
-        tag === "div" && elNode.classList.contains("footnote-definition")
+        tag === "div" &&
+        elNode.classList.contains("footnote-definition")
       ) {
         const id = elNode.getAttribute("data-id") || "";
         return `[^${id}]: ${this.convertElement(elNode).trim()}\n\n`;
@@ -299,7 +502,8 @@ class MarkdownConverter {
       this.convertElement(th).trim()
     );
     const headerLine = "| " + headerCells.join(" | ") + " |";
-    const alignmentLine = "| " + headerCells.map(() => "---").join(" | ") +
+    const alignmentLine = "| " +
+      headerCells.map(() => "---").join(" | ") +
       " |";
     const rows = Array.from(tbody.querySelectorAll("tr")).map((tr) => {
       const cells = Array.from(tr.querySelectorAll("td")).map((td) =>
@@ -319,4 +523,4 @@ class MarkdownConverter {
   }
 }
 
-export default new MarkdownConverter();
+export default MarkdownConverter;
