@@ -155,7 +155,7 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     this.toggleBlock("h3");
   }
 
-  public editLink() {
+  public addLink() {
     //TODO:
   }
 
@@ -203,7 +203,17 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
   }
 
   public addTable() {
-    //TODO:
+    const range = this.getCurrentRange();
+    if (range && this.htmlElement.contains(range.commonAncestorContainer)) {
+      const newTable = document.createElement("table");
+      for (let i = 0; i < 3; i += 1) {
+        const newRow = newTable.insertRow();
+        for (let j = 0; j < 3; j += 1) {
+          newRow.insertCell();
+        }
+      }
+      range.insertNode(newTable);
+    }
   }
 
   public addImage() {

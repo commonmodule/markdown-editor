@@ -23,7 +23,7 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     toggleItalic(): void;
     toggleStrikethrough(): void;
     toggleHeading(): void;
-    editLink(): void;
+    addLink(): void;
     toggleBulletList(): void;
     toggleNumberList(): void;
     toggleQuoteBlock(): void;

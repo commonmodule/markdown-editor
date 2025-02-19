@@ -121,7 +121,7 @@ export default class RichTextEditor extends DomNode {
         ToolbarButton,
         "link",
         new MarkdownEditorConfig.LinkIcon(),
-        () => this.editableArea.editLink(),
+        () => this.editableArea.addLink(),
       );
     } else if (buttonIndex === 5) {
       return this.createToolbarButton(
