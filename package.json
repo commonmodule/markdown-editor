@@ -9,7 +9,8 @@
   "dependencies": {
     "@common-module/app-components": "^0.1.6",
     "dompurify": "^3.2.4",
-    "marked": "^15.0.7"
+    "marked": "^15.0.7",
+    "turndown": "^7.2.0"
   },
   "devDependencies": {}
 }

@@ -50,79 +50,112 @@ export default class RichTextEditor extends DomNode {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.BoldIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("bold"),
       });
     } else if (buttonIndex === 1) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.ItalicIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("italic"),
       });
     } else if (buttonIndex === 2) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.StrikethroughIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("strikethrough"),
       });
     } else if (buttonIndex === 3) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.HeadingIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("formatBlock", false, "h1"),
       });
     } else if (buttonIndex === 4) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.LinkIcon(),
-        onClick: () => {},
+        onClick: () => {
+          //TODO:
+        },
       });
     } else if (buttonIndex === 5) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.BulletListIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("insertUnorderedList"),
       });
     } else if (buttonIndex === 6) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.NumberListIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("insertOrderedList"),
       });
     } else if (buttonIndex === 7) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.QuoteBlockIcon(),
-        onClick: () => {},
+        onClick: () => document.execCommand("formatBlock", false, "blockquote"),
       });
     } else if (buttonIndex === 8) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.CodeIcon(),
-        onClick: () => {},
+        onClick: () => {
+          const selection = window.getSelection();
+          const selectedText = selection && selection.toString()
+            ? selection.toString()
+            : "";
+          const html = `<code>${selectedText}</code>`;
+          document.execCommand("insertHTML", false, html);
+        },
       });
     } else if (buttonIndex === 9) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.CodeBlockIcon(),
-        onClick: () => {},
+        onClick: () => {
+          const selection = window.getSelection();
+          const selectedText = selection && selection.toString()
+            ? selection.toString()
+            : "";
+          const html = `<pre><code>${selectedText}</code></pre>`;
+          document.execCommand("insertHTML", false, html);
+        },
       });
     } else if (buttonIndex === 10) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.TableIcon(),
-        onClick: () => {},
+        onClick: () => {
+          const tableHTML =
+            `<table border="1" style="border-collapse: collapse;">
+  <tr>
+    <th>Header 1</th>
+    <th>Header 2</th>
+  </tr>
+  <tr>
+    <td>Data 1</td>
+    <td>Data 2</td>
+  </tr>
+</table>`;
+          document.execCommand("insertHTML", false, tableHTML);
+        },
       });
     } else if (buttonIndex === 11) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.ImageIcon(),
-        onClick: () => {},
+        onClick: () => {
+          //TODO:
+        },
       });
     } else if (buttonIndex === 12) {
       return new Button({
         type: ButtonType.Icon,
         icon: new MarkdownEditorConfig.YouTubeIcon(),
-        onClick: () => {},
+        onClick: () => {
+          //TODO:
+        },
       });
     }
   }
