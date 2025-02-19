@@ -174,7 +174,14 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
   }
 
   public toggleCodeBlock() {
-    //TODO:
+    const currentTextStyle = this.getCurrentTextStyle();
+    if (currentTextStyle.isInCodeBlock) {
+      this.toggleBlock("code");
+      this.toggleBlock("pre");
+    } else {
+      this.toggleBlock("pre");
+      this.toggleBlock("code");
+    }
   }
 
   public addTable() {
