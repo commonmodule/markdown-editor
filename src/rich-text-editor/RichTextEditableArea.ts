@@ -86,6 +86,55 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
   }
 
   private toggleBlock(tag: string) {
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const range = this.getCurrentRange();
+    if (range && this.htmlElement.contains(range.commonAncestorContainer)) {
+      let existingElement: HTMLElement | undefined;
+
+      let currentNode: Node | null = range.commonAncestorContainer;
+      while (currentNode && currentNode !== this.htmlElement) {
+        if (currentNode.nodeName.toLowerCase() === tag) {
+          existingElement = currentNode as HTMLElement;
+          break;
+        }
+        currentNode = currentNode.parentNode;
+      }
+
+      if (existingElement) {
+        const parent = existingElement.parentElement;
+        if (!parent) return;
+
+        let firstNewElement: HTMLElement | undefined;
+        let lastNewElement: HTMLElement | undefined;
+        while (existingElement.firstChild) {
+          const newElement = parent.insertBefore(
+            existingElement.firstChild,
+            existingElement,
+          );
+          if (!firstNewElement) firstNewElement = newElement as HTMLElement;
+          lastNewElement = newElement as HTMLElement;
+        }
+        parent.removeChild(existingElement);
+
+        if (firstNewElement && lastNewElement) {
+          selection.removeAllRanges();
+          const newRange = document.createRange();
+          newRange.setStartBefore(firstNewElement);
+          newRange.setEndAfter(lastNewElement);
+          selection.addRange(newRange);
+        }
+      } else {
+        const newElement = document.createElement(tag);
+        range.surroundContents(newElement);
+
+        selection.removeAllRanges();
+        const newRange = document.createRange();
+        newRange.selectNodeContents(newElement);
+        selection.addRange(newRange);
+      }
+    }
   }
 
   public toggleBold() {

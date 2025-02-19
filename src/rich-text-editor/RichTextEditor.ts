@@ -48,7 +48,6 @@ export default class RichTextEditor extends DomNode {
     this.onWindow("resize", () => this.updateToolbar());
 
     this.editableArea.on("selectionChanged", (textStyle) => {
-      console.log(textStyle);
       const tbs = this.toolbarButtons;
       if (textStyle.isBold) tbs.bold.addClass("active");
       else tbs.bold.removeClass("active");
