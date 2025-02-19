@@ -121,7 +121,9 @@ export default class RichTextEditor extends DomNode {
         ToolbarButton,
         "link",
         new MarkdownEditorConfig.LinkIcon(),
-        () => this.editableArea.addLink(),
+        () => {
+          //TODO:
+        },
       );
     } else if (buttonIndex === 5) {
       return this.createToolbarButton(
@@ -170,14 +172,18 @@ export default class RichTextEditor extends DomNode {
         ToolbarButton,
         "image",
         new MarkdownEditorConfig.ImageIcon(),
-        () => this.editableArea.addImage(),
+        () => {
+          //TODO:
+        },
       );
     } else if (buttonIndex === 12) {
       return this.createToolbarButton(
         ToolbarButton,
         "youtube",
         new MarkdownEditorConfig.YouTubeIcon(),
-        () => this.editableArea.addYouTubeVideo(),
+        () => {
+          //TODO:
+        },
       );
     }
   }

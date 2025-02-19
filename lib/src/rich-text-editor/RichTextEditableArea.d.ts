@@ -5,6 +5,7 @@ interface TextStyle {
     isStrikethrough: boolean;
     isHeading: boolean;
     isLink: boolean;
+    href?: string;
     isInBulletList: boolean;
     isInNumberList: boolean;
     isInQuoteBlock: boolean;
@@ -23,15 +24,15 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     toggleItalic(): void;
     toggleStrikethrough(): void;
     toggleHeading(): void;
-    addLink(): void;
+    setLink(href: string): void;
     toggleBulletList(): void;
     toggleNumberList(): void;
     toggleQuoteBlock(): void;
     toggleCode(): void;
     toggleCodeBlock(): void;
     addTable(): void;
-    addImage(): void;
-    addYouTubeVideo(): void;
+    addImage(url: string): void;
+    addYouTubeVideo(url: string): void;
     remove(): void;
 }
 export {};

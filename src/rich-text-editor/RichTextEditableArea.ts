@@ -6,6 +6,7 @@ interface TextStyle {
   isStrikethrough: boolean;
   isHeading: boolean;
   isLink: boolean;
+  href?: string;
   isInBulletList: boolean;
   isInNumberList: boolean;
   isInQuoteBlock: boolean;
@@ -66,6 +67,7 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
         style.isHeading = true;
       } else if (nodeName === "a") {
         style.isLink = true;
+        style.href = (currentNode as HTMLAnchorElement).href;
       } else if (nodeName === "ul") {
         style.isInBulletList = true;
       } else if (nodeName === "ol") {
@@ -155,7 +157,7 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     this.toggleBlock("h3");
   }
 
-  public addLink() {
+  public setLink(href: string) {
     //TODO:
   }
 
@@ -216,11 +218,11 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     }
   }
 
-  public addImage() {
+  public addImage(url: string) {
     //TODO:
   }
 
-  public addYouTubeVideo() {
+  public addYouTubeVideo(url: string) {
     //TODO:
   }
 
