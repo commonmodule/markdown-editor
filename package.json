@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "webpack": "node node_modules/webpack-cli/bin/cli.js --mode development --watch --config webpack.config.ts"
+  },
   "name": "@common-module/markdown-editor",
   "author": "yj.gaia",
   "homepage": "https://personas.gaia.cc/yj.gaia",
