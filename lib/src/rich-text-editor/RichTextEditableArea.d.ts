@@ -15,6 +15,10 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     selectionChanged: (textStyle: TextStyle) => void;
 }> {
     constructor();
+    private getCurrentRange;
+    private handleSelectionChange;
+    private getCurrentTextStyle;
+    private toggleBlock;
     toggleBold(): void;
     toggleItalic(): void;
     toggleStrikethrough(): void;
@@ -28,6 +32,7 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     addTable(): void;
     addImage(): void;
     addYouTubeVideo(): void;
+    remove(): void;
 }
 export {};
 //# sourceMappingURL=RichTextEditableArea.d.ts.map
