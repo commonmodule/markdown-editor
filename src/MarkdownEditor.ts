@@ -5,7 +5,7 @@ export default class MarkdownEditor extends DomNode {
     super(".markdown-editor");
     this.htmlElement.contentEditable = "true";
     this.onDom("keydown", (event) => this.onKeyDown(event));
-    this.onDom("input", () => this.updateStyles());
+    this.onDom("paste", () => setTimeout(() => this.updateStyles(), 0));
   }
 
   private onKeyDown(event: KeyboardEvent) {
@@ -15,6 +15,12 @@ export default class MarkdownEditor extends DomNode {
     } else if ((event.metaKey || event.ctrlKey) && event.key === "i") {
       event.preventDefault();
       this.toggleMarkdownStyle("*");
+    } else if (
+      (event.shiftKey && event.key === "*") ||
+      (event.key === "Backspace") ||
+      (event.key === "Delete")
+    ) {
+      setTimeout(() => this.updateStyles(), 0);
     }
   }
 
@@ -123,7 +129,6 @@ export default class MarkdownEditor extends DomNode {
           consumed += 3;
         }
 
-        // 3) 다음으로 2개씩 처리 (**)
         while (starCount >= 2) {
           const top = stack[stack.length - 1];
           if (top === "strong") {
