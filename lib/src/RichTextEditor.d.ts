@@ -5,9 +5,11 @@ export default class RichTextEditor extends DomNode {
     private maxVisibleButtons?;
     private buttonContainer;
     private moreButton;
+    private editorArea;
     constructor();
     private createToolbarButton;
     private updateToolbar;
     private openMoreMenu;
+    getContent(): string;
 }
 //# sourceMappingURL=RichTextEditor.d.ts.map

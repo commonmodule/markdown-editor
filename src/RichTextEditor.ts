@@ -6,6 +6,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@common-module/app-components";
+import { MarkdownConverter } from "@common-module/markdown";
 import MarkdownEditorConfig from "./MarkdownEditorConfig.js";
 
 export default class RichTextEditor extends DomNode {
@@ -15,6 +16,7 @@ export default class RichTextEditor extends DomNode {
 
   private buttonContainer: DomNode;
   private moreButton: DomNode;
+  private editorArea: DomNode;
 
   constructor() {
     super(".rich-text-editor");
@@ -33,7 +35,7 @@ export default class RichTextEditor extends DomNode {
           },
         }),
       ),
-      el(".editor-area", { contentEditable: "true" }),
+      this.editorArea = el(".editor-area", { contentEditable: "true" }),
     );
 
     this.on("visible", () => this.updateToolbar());
@@ -206,5 +208,11 @@ export default class RichTextEditor extends DomNode {
       group.append(button);
     }
     menu.appendToMain(group);
+  }
+
+  public getContent(): string {
+    return MarkdownConverter.convertHtmlToMarkdown(
+      this.editorArea.htmlElement.innerHTML,
+    );
   }
 }
