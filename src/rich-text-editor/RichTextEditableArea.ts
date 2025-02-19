@@ -127,7 +127,9 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
         }
       } else {
         const newElement = document.createElement(tag);
-        range.surroundContents(newElement);
+        const contents = range.extractContents();
+        newElement.appendChild(contents);
+        range.insertNode(newElement);
 
         selection.removeAllRanges();
         const newRange = document.createRange();
@@ -158,11 +160,27 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
   }
 
   public toggleBulletList() {
-    //TODO:
+    //TODO: need more complex logic
+    const currentTextStyle = this.getCurrentTextStyle();
+    if (!currentTextStyle.isInBulletList) {
+      this.toggleBlock("ul");
+      this.toggleBlock("li");
+    } else {
+      this.toggleBlock("li");
+      this.toggleBlock("ul");
+    }
   }
 
   public toggleNumberList() {
-    //TODO:
+    //TODO: need more complex logic
+    const currentTextStyle = this.getCurrentTextStyle();
+    if (!currentTextStyle.isInNumberList) {
+      this.toggleBlock("ol");
+      this.toggleBlock("li");
+    } else {
+      this.toggleBlock("li");
+      this.toggleBlock("ol");
+    }
   }
 
   public toggleQuoteBlock() {
@@ -175,12 +193,12 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
 
   public toggleCodeBlock() {
     const currentTextStyle = this.getCurrentTextStyle();
-    if (currentTextStyle.isInCodeBlock) {
-      this.toggleBlock("code");
+    if (!currentTextStyle.isInCodeBlock) {
       this.toggleBlock("pre");
+      this.toggleBlock("code");
     } else {
-      this.toggleBlock("pre");
       this.toggleBlock("code");
+      this.toggleBlock("pre");
     }
   }
 
