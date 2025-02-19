@@ -1921,6 +1921,12 @@ dialog.modal.quantity-input-dialog > main {
   padding: 16px;
   min-height: 200px;
 }
+.rich-text-editor > .editor-area i {
+  font-style: italic;
+}
+.rich-text-editor > .editor-area s {
+  text-decoration: line-through;
+}
 /* Social Components */
 .author-name-display {
   font-weight: bold;
