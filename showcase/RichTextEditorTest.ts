@@ -1,6 +1,6 @@
 import { BodyNode, el, View } from "@common-module/app";
 import { Button } from "@common-module/app-components";
-import RichTextEditor from "../src/RichTextEditor.js";
+import RichTextEditor from "../src/rich-text-editor/RichTextEditor.js";
 
 export default class RichTextEditorTest extends View {
   private richTextEditor: RichTextEditor;
