@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
+    "@types/turndown": "^5.0.5",
     "@types/uuid": "^10.0.0",
     "@types/webpack": "^5.28.5",
     "css-loader": "^7.1.2",
