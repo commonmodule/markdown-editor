@@ -35,7 +35,9 @@ export default class RichTextEditor extends DomNode {
           },
         }),
       ),
-      this.editorArea = el(".editor-area", { contentEditable: "true" }),
+      this.editorArea = el(".editor-area.markdown-document", {
+        contentEditable: "true",
+      }),
     );
 
     this.on("visible", () => this.updateToolbar());
