@@ -18,6 +18,7 @@ export default class RichTextEditor extends DomNode {
   private gap?: number;
   private buttonWidth?: number;
   private maxVisibleButtons?: number;
+  private currentLinkHref?: string;
 
   private toolbarButtons: Record<string, DomNode> = {};
   private buttonContainer: DomNode;
@@ -48,6 +49,8 @@ export default class RichTextEditor extends DomNode {
     this.onWindow("resize", () => this.updateToolbar());
 
     this.editableArea.on("selectionChanged", (textStyle) => {
+      this.currentLinkHref = textStyle.href;
+
       const tbs = this.toolbarButtons;
       if (textStyle.isBold) tbs.bold.addClass("active");
       else tbs.bold.removeClass("active");
