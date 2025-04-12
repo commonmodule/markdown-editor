@@ -3,6 +3,7 @@ export default class RichTextEditor extends DomNode {
     private gap?;
     private buttonWidth?;
     private maxVisibleButtons?;
+    private currentLinkHref?;
     private toolbarButtons;
     private buttonContainer;
     private moreButton;
