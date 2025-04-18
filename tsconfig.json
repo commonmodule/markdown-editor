@@ -72,6 +72,7 @@
     "old",
     "test",
     "legacy",
+    "showcase",
     "webpack.config.ts"
   ],
   "ts-node": {
