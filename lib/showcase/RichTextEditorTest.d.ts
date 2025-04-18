@@ -1,4 +1,4 @@
-import { View } from "@common-module/app";
+import { View } from "@commonmodule/app";
 export default class RichTextEditorTest extends View {
     private richTextEditor;
     constructor();

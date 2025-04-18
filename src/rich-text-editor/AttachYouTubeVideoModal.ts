@@ -1,4 +1,4 @@
-import { StructuredModal } from "@common-module/app-components";
+import { StructuredModal } from "@commonmodule/app-components";
 
 export default class AttachYouTubeVideoModal extends StructuredModal {
   constructor() {

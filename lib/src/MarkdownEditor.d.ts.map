@@ -1,1 +1,0 @@
-{"version":3,"file":"MarkdownEditor.d.ts","sourceRoot":"","sources":["../../src/MarkdownEditor.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,oBAAoB,CAAC;AAE7C,MAAM,CAAC,OAAO,OAAO,cAAe,SAAQ,OAAO;;IAQjD,OAAO,CAAC,SAAS;IAgBjB,OAAO,CAAC,mBAAmB;IA2B3B,OAAO,CAAC,cAAc;IAatB,OAAO,CAAC,cAAc;IAqCtB,OAAO,CAAC,sBAAsB;IA2E9B,OAAO,CAAC,YAAY;CAOrB"}

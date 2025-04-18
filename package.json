@@ -2,7 +2,7 @@
   "scripts": {
     "webpack": "node node_modules/webpack-cli/bin/cli.js --mode development --watch --config webpack.config.ts"
   },
-  "name": "@common-module/markdown-editor",
+  "name": "@commonmodule/markdown-editor",
   "author": "yj.gaia",
   "homepage": "https://personas.gaia.cc/yj.gaia",
   "version": "0.0.3",
@@ -10,8 +10,8 @@
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "dependencies": {
-    "@common-module/app-components": "^0.1.7",
-    "@common-module/markdown": "^0.0.3"
+    "@commonmodule/app-components": "^0.1.8",
+    "@commonmodule/markdown": "^0.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",

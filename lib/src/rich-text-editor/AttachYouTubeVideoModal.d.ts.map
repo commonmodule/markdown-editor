@@ -1,1 +1,1 @@
-{"version":3,"file":"AttachYouTubeVideoModal.d.ts","sourceRoot":"","sources":["../../../src/rich-text-editor/AttachYouTubeVideoModal.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,+BAA+B,CAAC;AAEhE,MAAM,CAAC,OAAO,OAAO,uBAAwB,SAAQ,eAAe;;CAInE"}
+{"version":3,"file":"AttachYouTubeVideoModal.d.ts","sourceRoot":"","sources":["../../../src/rich-text-editor/AttachYouTubeVideoModal.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,8BAA8B,CAAC;AAE/D,MAAM,CAAC,OAAO,OAAO,uBAAwB,SAAQ,eAAe;;CAInE"}

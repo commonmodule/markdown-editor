@@ -1,4 +1,4 @@
-import { DomNode } from "@common-module/app";
+import { DomNode } from "@commonmodule/app";
 
 type DomNodeConstructor = new () => DomNode;
 

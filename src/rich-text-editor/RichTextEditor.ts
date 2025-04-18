@@ -1,12 +1,12 @@
-import { DomNode, el } from "@common-module/app";
+import { DomNode, el } from "@commonmodule/app";
 import {
   Button,
   ButtonType,
   DropdownMenu,
   DropdownMenuGroup,
   DropdownMenuItem,
-} from "@common-module/app-components";
-import { MarkdownConverter } from "@common-module/markdown";
+} from "@commonmodule/app-components";
+import { MarkdownConverter } from "@commonmodule/markdown";
 import MarkdownEditorConfig from "../MarkdownEditorConfig.js";
 import RichTextEditableArea from "./RichTextEditableArea.js";
 
