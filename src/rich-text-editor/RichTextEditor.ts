@@ -1,4 +1,4 @@
-import { DomNode, el } from "@commonmodule/app";
+import { AppRoot, Dom, el } from "@commonmodule/app";
 import {
   Button,
   ButtonType,
@@ -11,18 +11,18 @@ import MarkdownEditorConfig from "../MarkdownEditorConfig.js";
 import RichTextEditableArea from "./RichTextEditableArea.js";
 
 type ToolbarButtonClass = new (
-  options: { type: ButtonType; icon: DomNode; onClick: () => void },
-) => DomNode;
+  options: { type: ButtonType; icon: Dom; onClick: () => void },
+) => Dom;
 
-export default class RichTextEditor extends DomNode {
+export default class RichTextEditor extends Dom {
   private gap?: number;
   private buttonWidth?: number;
   private maxVisibleButtons?: number;
   private currentLinkHref?: string;
 
-  private toolbarButtons: Record<string, DomNode> = {};
-  private buttonContainer: DomNode;
-  private moreButton: DomNode;
+  private toolbarButtons: Record<string, Dom> = {};
+  private buttonContainer: Dom;
+  private moreButton: Dom;
   private editableArea: RichTextEditableArea;
 
   constructor() {
@@ -46,7 +46,7 @@ export default class RichTextEditor extends DomNode {
     );
 
     this.on("visible", () => this.updateToolbar());
-    this.onWindow("resize", () => this.updateToolbar());
+    AppRoot.bind(this, "resize", () => this.updateToolbar());
 
     this.editableArea.on("selectionChanged", (textStyle) => {
       this.currentLinkHref = textStyle.href;
@@ -78,7 +78,7 @@ export default class RichTextEditor extends DomNode {
   private createToolbarButton(
     ToolbarButton: ToolbarButtonClass,
     type: string,
-    icon: DomNode,
+    icon: Dom,
     onClick: () => void,
   ) {
     const button = new ToolbarButton({ type: ButtonType.Icon, icon, onClick });
@@ -233,7 +233,7 @@ export default class RichTextEditor extends DomNode {
     const group = new DropdownMenuGroup();
     for (let i = this.maxVisibleButtons!; i < 13; i += 1) {
       const button = this.createToolbarButtonByIndex(DropdownMenuItem, i);
-      button?.onDom("click", () => menu.remove());
+      button?.on("click", () => menu.remove());
       group.append(button);
     }
     menu.appendToMain(group);

@@ -1,20 +1,20 @@
-import { DomNode } from "@commonmodule/app";
-type DomNodeConstructor = new () => DomNode;
+import { Dom } from "@commonmodule/app";
+type DomConstructor = new () => Dom;
 declare class MarkdownEditorConfig {
-    BoldIcon: DomNodeConstructor;
-    ItalicIcon: DomNodeConstructor;
-    StrikethroughIcon: DomNodeConstructor;
-    HeadingIcon: DomNodeConstructor;
-    LinkIcon: DomNodeConstructor;
-    BulletListIcon: DomNodeConstructor;
-    NumberListIcon: DomNodeConstructor;
-    QuoteBlockIcon: DomNodeConstructor;
-    CodeIcon: DomNodeConstructor;
-    CodeBlockIcon: DomNodeConstructor;
-    TableIcon: DomNodeConstructor;
-    ImageIcon: DomNodeConstructor;
-    YouTubeIcon: DomNodeConstructor;
-    MoreIcon: DomNodeConstructor;
+    BoldIcon: DomConstructor;
+    ItalicIcon: DomConstructor;
+    StrikethroughIcon: DomConstructor;
+    HeadingIcon: DomConstructor;
+    LinkIcon: DomConstructor;
+    BulletListIcon: DomConstructor;
+    NumberListIcon: DomConstructor;
+    QuoteBlockIcon: DomConstructor;
+    CodeIcon: DomConstructor;
+    CodeBlockIcon: DomConstructor;
+    TableIcon: DomConstructor;
+    ImageIcon: DomConstructor;
+    YouTubeIcon: DomConstructor;
+    MoreIcon: DomConstructor;
 }
 declare const _default: MarkdownEditorConfig;
 export default _default;

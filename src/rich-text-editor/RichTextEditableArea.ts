@@ -1,4 +1,4 @@
-import { DomNode } from "@commonmodule/app";
+import { AppRoot, Dom } from "@commonmodule/app";
 
 interface TextStyle {
   isBold: boolean;
@@ -14,13 +14,18 @@ interface TextStyle {
   isInCodeBlock: boolean;
 }
 
-export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
+export default class RichTextEditableArea extends Dom<HTMLDivElement, {
   selectionChanged: (textStyle: TextStyle) => void;
 }> {
   constructor() {
     super(".rich-text-editable-area.markdown-document");
     this.htmlElement.contentEditable = "true";
-    document.addEventListener("selectionchange", this.handleSelectionChange);
+    AppRoot.bind(this, "selectionchange", () => {
+      const range = this.getCurrentRange();
+      if (range && this.htmlElement.contains(range.commonAncestorContainer)) {
+        this.emit("selectionChanged", this.getCurrentTextStyle());
+      }
+    });
   }
 
   private getCurrentRange(): Range | undefined {
@@ -29,13 +34,6 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
       ? selection.getRangeAt(0)
       : undefined;
   }
-
-  private handleSelectionChange = () => {
-    const range = this.getCurrentRange();
-    if (range && this.htmlElement.contains(range.commonAncestorContainer)) {
-      this.emit("selectionChanged", this.getCurrentTextStyle());
-    }
-  };
 
   private getCurrentTextStyle(): TextStyle {
     const style: TextStyle = {
@@ -224,10 +222,5 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
 
   public addYouTubeVideo(url: string) {
     //TODO:
-  }
-
-  public remove(): void {
-    document.removeEventListener("selectionchange", this.handleSelectionChange);
-    super.remove();
   }
 }

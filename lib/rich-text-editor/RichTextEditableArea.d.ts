@@ -1,4 +1,4 @@
-import { DomNode } from "@commonmodule/app";
+import { Dom } from "@commonmodule/app";
 interface TextStyle {
     isBold: boolean;
     isItalic: boolean;
@@ -12,12 +12,11 @@ interface TextStyle {
     isInCode: boolean;
     isInCodeBlock: boolean;
 }
-export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
+export default class RichTextEditableArea extends Dom<HTMLDivElement, {
     selectionChanged: (textStyle: TextStyle) => void;
 }> {
     constructor();
     private getCurrentRange;
-    private handleSelectionChange;
     private getCurrentTextStyle;
     private toggleBlock;
     toggleBold(): void;
@@ -33,7 +32,6 @@ export default class RichTextEditableArea extends DomNode<HTMLDivElement, {
     addTable(): void;
     addImage(url: string): void;
     addYouTubeVideo(url: string): void;
-    remove(): void;
 }
 export {};
 //# sourceMappingURL=RichTextEditableArea.d.ts.map

@@ -5,12 +5,12 @@
   "name": "@commonmodule/markdown-editor",
   "author": "yj.gaia",
   "homepage": "https://personas.gaia.cc/yj.gaia",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "dependencies": {
-    "@commonmodule/app-components": "^0.1.8",
+    "@commonmodule/app-components": "^0.3.6",
     "@commonmodule/markdown": "^0.0.3"
   },
   "devDependencies": {

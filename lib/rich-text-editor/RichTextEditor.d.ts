@@ -1,5 +1,5 @@
-import { DomNode } from "@commonmodule/app";
-export default class RichTextEditor extends DomNode {
+import { Dom } from "@commonmodule/app";
+export default class RichTextEditor extends Dom {
     private gap?;
     private buttonWidth?;
     private maxVisibleButtons?;

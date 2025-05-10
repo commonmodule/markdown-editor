@@ -1,6 +1,6 @@
-import { DomNode } from "@commonmodule/app";
+import { Dom } from "@commonmodule/app";
 
-export default abstract class StyledMarkdownArea extends DomNode {
+export default abstract class StyledMarkdownArea extends Dom {
   constructor(tag: `.${string}`) {
     super(`${tag}.styled-markdown-area`);
   }

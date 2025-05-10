@@ -1,5 +1,5 @@
-import { DomNode } from "@commonmodule/app";
-export default abstract class StyledMarkdownArea extends DomNode {
+import { Dom } from "@commonmodule/app";
+export default abstract class StyledMarkdownArea extends Dom {
     constructor(tag: `.${string}`);
     private getCaretOffset;
     private setCaretOffset;
