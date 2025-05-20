@@ -1,5 +1,6 @@
 import { Dom } from "@commonmodule/app";
-export default abstract class StyledMarkdownArea extends Dom {
+import { EventHandlers } from "@commonmodule/ts";
+export default abstract class StyledMarkdownArea<E extends EventHandlers = {}> extends Dom<HTMLDivElement, E> {
     constructor(tag: `.${string}`);
     private getCaretOffset;
     private setCaretOffset;

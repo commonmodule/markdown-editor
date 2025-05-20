@@ -11,7 +11,7 @@ import MarkdownEditorConfig from "../MarkdownEditorConfig.js";
 import RichTextEditableArea from "./RichTextEditableArea.js";
 
 type ToolbarButtonClass = new (
-  options: { type: ButtonType; icon: Dom; onClick: () => void },
+  options: { type: ButtonType; icon: Dom; onPress: () => void },
 ) => Dom;
 
 export default class RichTextEditor extends Dom {
@@ -79,9 +79,9 @@ export default class RichTextEditor extends Dom {
     ToolbarButton: ToolbarButtonClass,
     type: string,
     icon: Dom,
-    onClick: () => void,
+    onPress: () => void,
   ) {
-    const button = new ToolbarButton({ type: ButtonType.Icon, icon, onClick });
+    const button = new ToolbarButton({ type: ButtonType.Icon, icon, onPress });
     this.toolbarButtons[type] = button;
     button.on("remove", () => delete this.toolbarButtons[type]);
     return button;

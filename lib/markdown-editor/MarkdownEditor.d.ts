@@ -1,5 +1,7 @@
 import StyledMarkdownArea from "./StyledMarkdownArea.js";
-export default class MarkdownEditor extends StyledMarkdownArea {
+export default class MarkdownEditor extends StyledMarkdownArea<{
+    contentChanged: (newContent: string) => void;
+}> {
     constructor();
     private onKeyDown;
     private toggleMarkdownStyle;

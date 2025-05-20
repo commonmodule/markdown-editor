@@ -1,6 +1,8 @@
 import { Dom } from "@commonmodule/app";
+import { EventHandlers } from "@commonmodule/ts";
 
-export default abstract class StyledMarkdownArea extends Dom {
+export default abstract class StyledMarkdownArea<E extends EventHandlers = {}>
+  extends Dom<HTMLDivElement, E> {
   constructor(tag: `.${string}`) {
     super(`${tag}.styled-markdown-area`);
   }

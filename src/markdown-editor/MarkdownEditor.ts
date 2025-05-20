@@ -1,9 +1,15 @@
 import StyledMarkdownArea from "./StyledMarkdownArea.js";
 
-export default class MarkdownEditor extends StyledMarkdownArea {
+export default class MarkdownEditor extends StyledMarkdownArea<{
+  contentChanged: (newContent: string) => void;
+}> {
   constructor() {
     super(".markdown-editor");
     this.htmlElement.contentEditable = "true";
+    this.on(
+      "input",
+      () => this.emit("contentChanged", this.htmlElement.innerText),
+    );
     this.on("keydown", (event) => this.onKeyDown(event));
     this.on("paste", () => setTimeout(() => this.updateStyles(), 0));
   }
@@ -49,5 +55,7 @@ export default class MarkdownEditor extends StyledMarkdownArea {
     selection.addRange(newRange);
 
     this.updateStyles();
+
+    this.emit("contentChanged", this.htmlElement.innerText);
   }
 }
