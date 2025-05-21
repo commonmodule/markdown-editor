@@ -12,7 +12,7 @@ export default class RichTextEditorTest extends View {
       this.richTextEditor = new RichTextEditor(),
       new Button({
         title: "Get Content",
-        onClick: () => {
+        onPress: () => {
           console.log(this.richTextEditor.getContent());
         },
       }),
