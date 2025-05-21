@@ -16,10 +16,18 @@ interface TextStyle {
 
 export default class RichTextEditableArea extends Dom<HTMLDivElement, {
   selectionChanged: (textStyle: TextStyle) => void;
+  contentChanged: (content: string) => void;
 }> {
   constructor() {
     super(".rich-text-editable-area.markdown-document");
+
     this.htmlElement.contentEditable = "true";
+
+    this.on(
+      "input",
+      () => this.emit("contentChanged", this.htmlElement.innerHTML),
+    );
+
     AppRoot.bind(this, "selectionchange", () => {
       const range = this.getCurrentRange();
       if (range && this.htmlElement.contains(range.commonAncestorContainer)) {
@@ -137,6 +145,8 @@ export default class RichTextEditableArea extends Dom<HTMLDivElement, {
         selection.addRange(newRange);
       }
     }
+
+    this.emit("contentChanged", this.htmlElement.innerHTML);
   }
 
   public toggleBold() {

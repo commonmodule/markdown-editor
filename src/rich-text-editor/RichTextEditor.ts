@@ -14,7 +14,9 @@ type ToolbarButtonClass = new (
   options: { type: ButtonType; icon: Dom; onPress: () => void },
 ) => Dom;
 
-export default class RichTextEditor extends Dom {
+export default class RichTextEditor extends Dom<HTMLDivElement, {
+  contentChanged: (newContent: string) => void;
+}> {
   private gap?: number;
   private buttonWidth?: number;
   private maxVisibleButtons?: number;
@@ -72,6 +74,10 @@ export default class RichTextEditor extends Dom {
       else tbs.code.removeClass("active");
       if (textStyle.isInCodeBlock) tbs["code-block"].addClass("active");
       else tbs["code-block"].removeClass("active");
+    });
+
+    this.editableArea.on("contentChanged", (newContent) => {
+      this.emit("contentChanged", newContent);
     });
   }
 

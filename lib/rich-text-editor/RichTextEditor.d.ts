@@ -1,5 +1,7 @@
 import { Dom } from "@commonmodule/app";
-export default class RichTextEditor extends Dom {
+export default class RichTextEditor extends Dom<HTMLDivElement, {
+    contentChanged: (newContent: string) => void;
+}> {
     private gap?;
     private buttonWidth?;
     private maxVisibleButtons?;

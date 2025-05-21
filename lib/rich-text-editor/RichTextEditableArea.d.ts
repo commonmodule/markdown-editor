@@ -14,6 +14,7 @@ interface TextStyle {
 }
 export default class RichTextEditableArea extends Dom<HTMLDivElement, {
     selectionChanged: (textStyle: TextStyle) => void;
+    contentChanged: (content: string) => void;
 }> {
     constructor();
     private getCurrentRange;
